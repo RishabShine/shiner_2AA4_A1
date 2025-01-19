@@ -17,7 +17,7 @@ public class MazeReader {
         System.out.println("** Starting Maze Runner");
 
         try {
-            System.out.println("**** Reading the maze from file " + filepath);
+            logger.info("**** Reading the maze from file " + filepath);
             BufferedReader reader = new BufferedReader(new FileReader(filepath));
 
             // reading lines from file into array list
@@ -50,7 +50,7 @@ public class MazeReader {
                     }
                 }
             }
-            //? testing to print maze
+            //? testing to print maze (will remove)
             System.out.println("**** Maze Layout ****");
             for (int row = 0; row < maze.length; row++) {
                 for (int col = 0; col < maze[row].length; col++) {
@@ -61,7 +61,7 @@ public class MazeReader {
             return maze;
 
         } catch (Exception e) {
-            System.err.println("/!\\ An error has occurred /!\\");
+            logger.info("/!\\ An error has occurred /!\\");
             logger.error("Error reading maze file", e);
             return null;
         }

@@ -13,7 +13,7 @@ public class Main {
     private static final MazeReader mazeReader = new MazeReader();
 
     public static void main(String[] args) {
-        System.out.println("** Starting Maze Runner");
+        logger.info("** Starting Maze Runner");
 
         Options options = new Options();
 
@@ -37,13 +37,15 @@ public class Main {
             String filePath = cmd.getOptionValue("i");
 
             char[][] maze = mazeReader.readMaze(filePath);
+
+            //? testing state of maze read in
             System.out.println(maze);
         } catch (ParseException e) {
-            System.err.println("Error parsing command-line arguments: " + e.getMessage());
+            logger.error("Error parsing command-line arguments: " + e.getMessage());
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("MazeRunner", options);
         } catch (RuntimeException e) {
-            System.err.println("/!\\ An error has occurred /!\\");
+            logger.error("/!\\ An error has occurred /!\\");
             e.printStackTrace();
         }
 
@@ -64,8 +66,8 @@ public class Main {
         // } catch(Exception e) {
         //     System.err.println("/!\\ An error has occured /!\\");
         // }
-        System.out.println("**** Computing path");
-        System.out.println("PATH NOT COMPUTED");
-        System.out.println("** End of MazeRunner");
+        logger.info("**** Computing path");
+        logger.info("PATH NOT COMPUTED");
+        logger.info("** End of MazeRunner");
     }
 }
