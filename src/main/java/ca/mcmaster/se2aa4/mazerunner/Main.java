@@ -17,7 +17,7 @@ public class Main {
 
         Options options = new Options();
 
-        // Define the -i option for input file
+        // define the -i option for input file
         Option inputFileOption = Option.builder("i")
                 .longOpt("input")
                 .desc("Path to the maze input file")
@@ -30,10 +30,10 @@ public class Main {
         CommandLineParser parser = new DefaultParser();
 
         try {
-            // Parse the command-line arguments
+            // parse the command-line arguments
             CommandLine cmd = parser.parse(options, args);
 
-            // Get the value of the -i flag
+            // get the value of the -i flag
             String filePath = cmd.getOptionValue("i");
 
             char[][] maze = mazeReader.readMaze(filePath);
