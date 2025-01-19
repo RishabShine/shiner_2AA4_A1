@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.commons.cli.*;
 
 public class Main {
 
@@ -14,8 +15,37 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("** Starting Maze Runner");
 
-        char[][] maze = mazeReader.readMaze(args);
-        System.out.println(maze);
+        Options options = new Options();
+
+        // Define the -i option for input file
+        Option inputFileOption = Option.builder("i")
+                .longOpt("input")
+                .desc("Path to the maze input file")
+                .hasArg()
+                .argName("FILE")
+                .required(true)
+                .build();
+        options.addOption(inputFileOption);
+
+        CommandLineParser parser = new DefaultParser();
+
+        try {
+            // Parse the command-line arguments
+            CommandLine cmd = parser.parse(options, args);
+
+            // Get the value of the -i flag
+            String filePath = cmd.getOptionValue("i");
+
+            char[][] maze = mazeReader.readMaze(filePath);
+            System.out.println(maze);
+        } catch (ParseException e) {
+            System.err.println("Error parsing command-line arguments: " + e.getMessage());
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("MazeRunner", options);
+        } catch (RuntimeException e) {
+            System.err.println("/!\\ An error has occurred /!\\");
+            e.printStackTrace();
+        }
 
         // try {
         //     System.out.println("**** Reading the maze from file " + args[0]);

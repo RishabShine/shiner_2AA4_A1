@@ -13,34 +13,51 @@ public class MazeReader {
 
     private static final Logger logger = LogManager.getLogger();
     
-    public char[][] readMaze(String[] args) {
+    public char[][] readMaze(String filepath) {
         System.out.println("** Starting Maze Runner");
 
         try {
-            System.out.println("**** Reading the maze from file " + args[0]);
-            BufferedReader reader = new BufferedReader(new FileReader(args[0]));
+            System.out.println("**** Reading the maze from file " + filepath);
+            BufferedReader reader = new BufferedReader(new FileReader(filepath));
 
             // reading lines from file into array list
             List<String> lines = new ArrayList<>();
             String line;
+            // stores max row length / num columns as some rows are completed by blanks rather than spaces
+            int cols = 0;
+
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
+                // finding max row length
+                cols = Math.max(cols, line.length());
             }
             reader.close();
 
             // initializing 2D array to model maze
             int rows = lines.size();
-            int cols = lines.get(0).length();
             char[][] maze = new char[rows][cols];
 
-            // populating 2D array
+            // populating 2D array from file
             for (int row = 0; row < rows; row++) {
                 String currentLine = lines.get(row);
-                for (int col = 0; col < currentLine.length(); col++) {
-                    maze[row][col] = currentLine.charAt(col);
+                for (int col = 0; col < cols; col++) {
+                    if (col < currentLine.length()) {
+                        //System.out.println(currentLine.charAt(col));
+                        maze[row][col] = currentLine.charAt(col);
+                    } else {
+                        // padding with spaces
+                        maze[row][col] = ' ';
+                    }
                 }
             }
-
+            //? testing to print maze
+            System.out.println("**** Maze Layout ****");
+            for (int row = 0; row < maze.length; row++) {
+                for (int col = 0; col < maze[row].length; col++) {
+                    System.out.print(maze[row][col]);
+                }
+                System.out.println(); // Move to the next row
+            }
             return maze;
 
         } catch (Exception e) {
