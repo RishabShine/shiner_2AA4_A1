@@ -3,6 +3,8 @@ package ca.mcmaster.se2aa4.mazerunner;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.commons.cli.*;
@@ -36,7 +38,7 @@ public class Main {
             // get the value of the -i flag
             String filePath = cmd.getOptionValue("i");
 
-            char[][] maze = mazeReader.readMaze(filePath);
+            List<List<Character>> maze = mazeReader.readMaze(filePath);
 
             //? testing state of maze read in
             System.out.println(maze);

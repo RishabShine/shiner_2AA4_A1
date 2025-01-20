@@ -13,7 +13,7 @@ public class MazeReader {
 
     private static final Logger logger = LogManager.getLogger();
     
-    public char[][] readMaze(String filepath) {
+    public List<List<Character>> readMaze(String filepath) {
         System.out.println("** Starting Maze Runner");
 
         try {
@@ -33,32 +33,37 @@ public class MazeReader {
             }
             reader.close();
 
-            // initializing 2D array to model maze
+            // initializing 2D list to model maze
             int rows = lines.size();
-            char[][] maze = new char[rows][cols];
+            List<List<Character>> maze = new ArrayList<>();
 
-            // populating 2D array from file
+            // populating 2D list from file
             for (int row = 0; row < rows; row++) {
                 String currentLine = lines.get(row);
+                List<Character> mazeRow = new ArrayList<>();
+
                 for (int col = 0; col < cols; col++) {
                     if (col < currentLine.length()) {
-                        //System.out.println(currentLine.charAt(col));
-                        maze[row][col] = currentLine.charAt(col);
+                        mazeRow.add(currentLine.charAt(col));
                     } else {
                         // padding with spaces
-                        maze[row][col] = ' ';
+                        mazeRow.add(' ');
                     }
                 }
+                maze.add(mazeRow);
             }
-            //? testing to print maze (will remove)
-            System.out.println("**** Maze Layout ****");
-            for (int row = 0; row < maze.length; row++) {
-                for (int col = 0; col < maze[row].length; col++) {
-                    System.out.print(maze[row][col]);
-                }
-                System.out.println(); // Move to the next row
-            }
+
             return maze;
+
+            // //? testing to print maze (will remove)
+            // System.out.println("**** Maze Layout ****");
+            // for (int row = 0; row < maze.length; row++) {
+            //     for (int col = 0; col < maze[row].length; col++) {
+            //         System.out.print(maze[row][col]);
+            //     }
+            //     System.out.println(); // Move to the next row
+            // }
+            // return maze;
 
         } catch (Exception e) {
             logger.info("/!\\ An error has occurred /!\\");
