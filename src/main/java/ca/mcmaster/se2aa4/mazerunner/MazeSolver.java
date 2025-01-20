@@ -4,6 +4,7 @@ import java.util.List;
 
 public class MazeSolver {
 
+    // possible moves from an index (move down once, right once ...)
     private int[][] moves = {
         {1, 0}, 
         {0, 1}, 
@@ -12,9 +13,42 @@ public class MazeSolver {
     };
 
     /*
+     * returns an int array corresponding to the index of the start position
+     * 
+     * @param maze: 2D list representing the maze
+     * 
+     */
+    public int[] findStart(List<List<Character>> maze) {
+        for (int i = 0; i < maze.size(); i++) {
+            if (maze.get(i).get(0) == ' ') {
+                return new int[]{i, 0};
+            }
+        }
+        return null;
+    }
+
+    /*
+     * returns an int array corresponding to the index of the finish position
+     * 
+     * @param maze: 2D list representing the maze
+     * 
+     */
+    public int[] findFinish(List<List<Character>> maze) {
+
+        int mazeLength = maze.get(0).size() - 1;
+
+        for (int i = 0; i < maze.size(); i++) {
+            if (maze.get(i).get(mazeLength) == ' ') {
+                return new int[]{i, mazeLength};
+            }
+        }
+        return null;
+    }
+
+    /*
      * returns a string that describes a path from start to findih
      * 
-     * @param maze: 2D array representing the maze
+     * @param maze: 2D list representing the maze
      * @param currPos: current position / index at that iteration
      * @param finish: finishing position / index
      * @param path: the path taken
