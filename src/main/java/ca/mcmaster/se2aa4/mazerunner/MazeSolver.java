@@ -14,15 +14,15 @@ public class MazeSolver {
     //     {-1, 0},
     // };
 
-    // Map of moves with directional keys
+    // map of moves with directional keys
     private static final Map<Character, int[]> moves = new HashMap<>() {{
-        put('N', new int[]{-1, 0}); // Up
-        put('E', new int[]{0, 1});  // Right
-        put('S', new int[]{1, 0});  // Down
-        put('W', new int[]{0, -1}); // Left
+        put('N', new int[]{-1, 0}); // up
+        put('E', new int[]{0, 1});  // right
+        put('S', new int[]{1, 0});  // down
+        put('W', new int[]{0, -1}); // left
     }};
 
-    // Define the order of directions for left/right calculation
+    // order of directions for left/right calculation
     private static final List<Character> directions = List.of('N', 'E', 'S', 'W');
 
     /*
@@ -66,6 +66,9 @@ public class MazeSolver {
      * @param finish: finishing position / index
      * @param path: the path taken
      * @param checked: contains all visited indexes
+     * @param previousMove: direction of previous move to find determine the 
+     *                      direction of next move (on first iteration defaults
+     *                      to 'E')
      * 
      */
     public String findPath(List<List<Character>> maze, int[] currPos, int[] finish, String path, int[][] checked, char previousMove) {
@@ -113,13 +116,12 @@ public class MazeSolver {
         int currIndex = directions.indexOf(currentMove);
 
         if (currIndex == prevIndex) {
-            return 'F'; // Forward
+            return 'F'; // forward
         } else if ((prevIndex + 1) % 4 == currIndex) {
-            return 'R'; // Right turn
+            return 'R'; // right turn
         } else if ((prevIndex + 3) % 4 == currIndex) {
-            return 'L'; // Left turn
+            return 'L'; //left turn
         }
-
-        return 'F'; // Default forward if somehow not detected
+        return 'F';
     }
 }
