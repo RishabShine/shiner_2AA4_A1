@@ -13,7 +13,7 @@ public class MazeReader {
 
     private static final Logger logger = LogManager.getLogger();
     
-    public List<List<Character>> readMaze(String filepath) {
+    public List<List<Character>> loadMaze(String filepath) {
         System.out.println("** Starting Maze Runner");
 
         try {
