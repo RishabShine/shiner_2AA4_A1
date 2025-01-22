@@ -1,16 +1,29 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MazeSolver {
 
     // possible moves from an index (move down once, right once ...)
-    private int[][] moves = {
-        {1, 0}, 
-        {0, 1}, 
-        {0, -1}, 
-        {-1, 0},
-    };
+    // private int[][] moves = {
+    //     {1, 0}, 
+    //     {0, 1}, 
+    //     {0, -1}, 
+    //     {-1, 0},
+    // };
+
+    // Map of moves with directional keys
+    private static final Map<Character, int[]> moves = new HashMap<>() {{
+        put('N', new int[]{-1, 0}); // Up
+        put('E', new int[]{0, 1});  // Right
+        put('S', new int[]{1, 0});  // Down
+        put('W', new int[]{0, -1}); // Left
+    }};
+
+    // Define the order of directions for left/right calculation
+    private static final List<Character> directions = List.of('N', 'E', 'S', 'W');
 
     /*
      * returns an int array corresponding to the index of the start position
@@ -55,7 +68,7 @@ public class MazeSolver {
      * @param checked: contains all visited indexes
      * 
      */
-    public String findPath(List<List<Character>> maze, int[] currPos, int[] finish, String path, int[][] checked) {
+    public String findPath(List<List<Character>> maze, int[] currPos, int[] finish, String path, int[][] checked, char previousMove) {
         int row = currPos[0];
         int col = currPos[1];
 
@@ -73,15 +86,15 @@ public class MazeSolver {
         checked[row][col] = 1;
 
         // try all possible moves
-        for (int i = 0; i < moves.length; i++) {
-            int newRow = row + moves[i][0];
-            int newCol = col + moves[i][1];
+        for (char moveDir : moves.keySet()) {
+            int newRow = row + moves.get(moveDir)[0];
+            int newCol = col + moves.get(moveDir)[1];
 
             // map move to path characters
-            char moveChar = getMoveChar(i);
+            char moveChar = getMoveChar(previousMove, moveDir);
 
             // recursive call to explore next move + updating path and position
-            String result = findPath(maze, new int[]{newRow, newCol}, finish, path + moveChar, checked);
+            String result = findPath(maze, new int[]{newRow, newCol}, finish, path + moveChar, checked, moveChar);
             
             if (result != null) {
                 // return path if valid solution is found
@@ -95,13 +108,18 @@ public class MazeSolver {
     }
 
     // maps moves to letter for the path
-    private char getMoveChar(int moveIndex) {
-        switch (moveIndex) {
-            case 0: return 'D';  // down
-            case 1: return 'R';  // right
-            case 2: return 'L';  // left
-            case 3: return 'U';  // up
-            default: return '?';
+    public static char getMoveChar(char previousMove, char currentMove) {
+        int prevIndex = directions.indexOf(previousMove);
+        int currIndex = directions.indexOf(currentMove);
+
+        if (currIndex == prevIndex) {
+            return 'F'; // Forward
+        } else if ((prevIndex + 1) % 4 == currIndex) {
+            return 'R'; // Right turn
+        } else if ((prevIndex + 3) % 4 == currIndex) {
+            return 'L'; // Left turn
         }
+
+        return 'F'; // Default forward if somehow not detected
     }
 }
