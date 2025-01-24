@@ -77,7 +77,7 @@ public class MazeSolver {
 
         // base cases
         if (row == finish[0] && col == finish[1]) {
-            return path;  // found the finish, return the path taken
+            return path + "F";  // found the finish, return the path taken
         }
         // checking if in an invalid position (wall or off the maze)
         if (row < 0 || row >= maze.size() || col < 0 || col >= maze.get(0).size() 
@@ -94,10 +94,10 @@ public class MazeSolver {
             int newCol = col + moves.get(moveDir)[1];
 
             // map move to path characters
-            char moveChar = getMoveChar(previousMove, moveDir);
+            String moveChar = getMoveChar(previousMove, moveDir);
 
             // recursive call to explore next move + updating path and position
-            String result = findPath(maze, new int[]{newRow, newCol}, finish, path + moveChar, checked, moveChar);
+            String result = findPath(maze, new int[]{newRow, newCol}, finish, path + moveChar, checked, moveDir);
             
             if (result != null) {
                 // return path if valid solution is found
@@ -111,17 +111,17 @@ public class MazeSolver {
     }
 
     // maps moves to letter for the path
-    public static char getMoveChar(char previousMove, char currentMove) {
+    public static String getMoveChar(char previousMove, char currentMove) {
         int prevIndex = directions.indexOf(previousMove);
         int currIndex = directions.indexOf(currentMove);
 
         if (currIndex == prevIndex) {
-            return 'F'; // forward
+            return "F"; // forward
         } else if ((prevIndex + 1) % 4 == currIndex) {
-            return 'R'; // right turn
+            return "RF"; // right turn
         } else if ((prevIndex + 3) % 4 == currIndex) {
-            return 'L'; //left turn
+            return "LF"; //left turn
         }
-        return 'F';
+        return "F";
     }
 }

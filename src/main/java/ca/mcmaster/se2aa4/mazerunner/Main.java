@@ -13,6 +13,7 @@ public class Main {
 
     private static final Logger logger = LogManager.getLogger();
     private static final MazeReader mazeReader = new MazeReader();
+    private static final MazeService mazeService = new MazeService();
 
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
@@ -38,10 +39,12 @@ public class Main {
             // get the value of the -i flag
             String filePath = cmd.getOptionValue("i");
 
-            List<List<Character>> maze = mazeReader.readMaze(filePath);
+            //List<List<Character>> maze = mazeReader.readMaze(filePath);
+            System.out.println();
+            logger.info(mazeService.getPath(filePath));
 
             //? testing state of maze read in
-            System.out.println(maze);
+            //System.out.println(maze);
         } catch (ParseException e) {
             logger.error("Error parsing command-line arguments: " + e.getMessage());
             HelpFormatter formatter = new HelpFormatter();
@@ -68,8 +71,8 @@ public class Main {
         // } catch(Exception e) {
         //     System.err.println("/!\\ An error has occured /!\\");
         // }
-        logger.info("**** Computing path");
-        logger.info("PATH NOT COMPUTED");
-        logger.info("** End of MazeRunner");
+        // logger.info("**** Computing path");
+        // logger.info("PATH NOT COMPUTED");
+        // logger.info("** End of MazeRunner");
     }
 }
