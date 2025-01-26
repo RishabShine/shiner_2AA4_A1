@@ -6,24 +6,36 @@ import java.util.Map;
 
 public class MazeSolver {
 
-    // possible moves from an index (move down once, right once ...)
-    // private int[][] moves = {
-    //     {1, 0}, 
-    //     {0, 1}, 
-    //     {0, -1}, 
-    //     {-1, 0},
-    // };
+    private char[] movePriority = {'R', 'F', 'L'};
+
+
 
     // map of moves with directional keys
-    private static final Map<Character, int[]> moves = new HashMap<>() {{
-        put('N', new int[]{-1, 0}); // up
-        put('E', new int[]{0, 1});  // right
-        put('S', new int[]{1, 0});  // down
-        put('W', new int[]{0, -1}); // left
-    }};
+    Map<Character, int[]> moves = Map.of(
+        'N', new int[]{-1, 0},
+        'E', new int[]{0, 1},
+        'S', new int[]{1, 0},
+        'W', new int[]{0, -1}
+    );
 
-    // order of directions for left/right calculation
-    private static final List<Character> directions = List.of('N', 'E', 'S', 'W');
+    // corresponding directions for a right for current direction
+    Map<Character, Character> rightTurn = Map.of(
+        'N', 'E',
+        'E', 'S',
+        'S', 'W',
+        'W', 'N'
+    );
+
+    // corresponding directions for a right turn for current direction
+    Map<Character, Character> leftTurn = Map.of(
+        'N', 'W',
+        'E', 'N',
+        'S', 'E',
+        'W', 'S'
+    );
+
+    // // order of directions for left/right calculation
+    // private static final List<Character> directions = List.of('N', 'E', 'S', 'W');
 
     /*
      * returns an int array corresponding to the index of the start position
@@ -71,6 +83,45 @@ public class MazeSolver {
      *                      to 'E')
      * 
      */
+    // public String findPath(List<List<Character>> maze, int[] currPos, int[] finish, String path, int[][] checked, char previousMove) {
+    //     int row = currPos[0];
+    //     int col = currPos[1];
+
+    //     // base cases
+    //     if (row == finish[0] && col == finish[1]) {
+    //         return path + "F";  // found the finish, return the path taken
+    //     }
+    //     // checking if in an invalid position (wall or off the maze)
+    //     if (row < 0 || row >= maze.size() || col < 0 || col >= maze.get(0).size() 
+    //             || maze.get(row).get(col) == '#' || checked[row][col] == 1) {
+    //         return null;
+    //     }
+
+    //     // mark current position as visited
+    //     checked[row][col] = 1;
+
+    //     // try all possible moves
+    //     for (char moveDir : moves.keySet()) {
+    //         int newRow = row + moves.get(moveDir)[0];
+    //         int newCol = col + moves.get(moveDir)[1];
+
+    //         // map move to path characters
+    //         String moveChar = getMoveChar(previousMove, moveDir);
+
+    //         // recursive call to explore next move + updating path and position
+    //         String result = findPath(maze, new int[]{newRow, newCol}, finish, path + moveChar, checked, moveDir);
+            
+    //         if (result != null) {
+    //             // return path if valid solution is found
+    //             return result;
+    //         }
+    //     }
+
+    //     // unmark position if no valid path was found
+    //     checked[row][col] = 0;
+    //     return null; 
+    // }
+
     public String findPath(List<List<Character>> maze, int[] currPos, int[] finish, String path, int[][] checked, char previousMove) {
         int row = currPos[0];
         int col = currPos[1];
@@ -88,20 +139,26 @@ public class MazeSolver {
         // mark current position as visited
         checked[row][col] = 1;
 
-        // try all possible moves
-        for (char moveDir : moves.keySet()) {
-            int newRow = row + moves.get(moveDir)[0];
-            int newCol = col + moves.get(moveDir)[1];
+        for (char move : movePriority) {
 
-            // map move to path characters
-            String moveChar = getMoveChar(previousMove, moveDir);
-
-            // recursive call to explore next move + updating path and position
-            String result = findPath(maze, new int[]{newRow, newCol}, finish, path + moveChar, checked, moveDir);
-            
+            char newDirection = previousMove;
+            String moveString = getMoveString(move);
+    
+            if (move == 'R') {
+                newDirection = rightTurn.get(previousMove);
+            } else if (move == 'L') {
+                newDirection = leftTurn.get(previousMove);
+            }
+    
+            int[] moveOffset = moves.get(newDirection);
+            int newRow = row + moveOffset[0];
+            int newCol = col + moveOffset[1];
+    
+            // recursive call to explore next move and update path
+            String result = findPath(maze, new int[]{newRow, newCol}, finish, path + moveString, checked, newDirection);
+    
             if (result != null) {
-                // return path if valid solution is found
-                return result;
+                return result;  // return the path if a solution is found
             }
         }
 
@@ -111,16 +168,13 @@ public class MazeSolver {
     }
 
     // maps moves to letter for the path
-    public static String getMoveChar(char previousMove, char currentMove) {
-        int prevIndex = directions.indexOf(previousMove);
-        int currIndex = directions.indexOf(currentMove);
-
-        if (currIndex == prevIndex) {
+    public static String getMoveString(char move) {
+        if (move == 'F') {
             return "F"; // forward
-        } else if ((prevIndex + 1) % 4 == currIndex) {
+        } else if (move == 'R') {
             return "RF"; // right turn
-        } else if ((prevIndex + 3) % 4 == currIndex) {
-            return "LF"; //left turn
+        } else if (move == 'L') {
+            return "LF"; // left turn
         }
         return "F";
     }
