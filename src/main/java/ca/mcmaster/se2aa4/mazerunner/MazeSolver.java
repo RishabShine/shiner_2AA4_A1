@@ -1,17 +1,16 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MazeSolver {
+public class MazeSolver implements PathFinder {
 
     private char[] movePriority = {'R', 'F', 'L'};
 
 
 
     // map of moves with directional keys
-    Map<Character, int[]> moves = Map.of(
+    private Map<Character, int[]> moves = Map.of(
         'N', new int[]{-1, 0},
         'E', new int[]{0, 1},
         'S', new int[]{1, 0},
@@ -19,7 +18,7 @@ public class MazeSolver {
     );
 
     // corresponding directions for a right for current direction
-    Map<Character, Character> rightTurn = Map.of(
+    private Map<Character, Character> rightTurn = Map.of(
         'N', 'E',
         'E', 'S',
         'S', 'W',
@@ -27,22 +26,14 @@ public class MazeSolver {
     );
 
     // corresponding directions for a right turn for current direction
-    Map<Character, Character> leftTurn = Map.of(
+    private Map<Character, Character> leftTurn = Map.of(
         'N', 'W',
         'E', 'N',
         'S', 'E',
         'W', 'S'
     );
 
-    // // order of directions for left/right calculation
-    // private static final List<Character> directions = List.of('N', 'E', 'S', 'W');
-
-    /*
-     * returns an int array corresponding to the index of the start position
-     * 
-     * @param maze: 2D list representing the maze
-     * 
-     */
+    @Override
     public int[] findStart(List<List<Character>> maze) {
         for (int i = 0; i < maze.size(); i++) {
             if (maze.get(i).get(0) == ' ') {
@@ -52,12 +43,7 @@ public class MazeSolver {
         return null;
     }
 
-    /*
-     * returns an int array corresponding to the index of the finish position
-     * 
-     * @param maze: 2D list representing the maze
-     * 
-     */
+    @Override
     public int[] findFinish(List<List<Character>> maze) {
 
         int mazeLength = maze.get(0).size() - 1;
@@ -70,64 +56,14 @@ public class MazeSolver {
         return null;
     }
 
-    /*
-     * returns a string that describes a path from start to findih
-     * 
-     * @param maze: 2D list representing the maze
-     * @param currPos: current position / index at that iteration
-     * @param finish: finishing position / index
-     * @param path: the path taken
-     * @param checked: contains all visited indexes
-     * @param previousMove: direction of previous move to find determine the 
-     *                      direction of next move (on first iteration defaults
-     *                      to 'E')
-     * 
-     */
-    // public String findPath(List<List<Character>> maze, int[] currPos, int[] finish, String path, int[][] checked, char previousMove) {
-    //     int row = currPos[0];
-    //     int col = currPos[1];
-
-    //     // base cases
-    //     if (row == finish[0] && col == finish[1]) {
-    //         return path + "F";  // found the finish, return the path taken
-    //     }
-    //     // checking if in an invalid position (wall or off the maze)
-    //     if (row < 0 || row >= maze.size() || col < 0 || col >= maze.get(0).size() 
-    //             || maze.get(row).get(col) == '#' || checked[row][col] == 1) {
-    //         return null;
-    //     }
-
-    //     // mark current position as visited
-    //     checked[row][col] = 1;
-
-    //     // try all possible moves
-    //     for (char moveDir : moves.keySet()) {
-    //         int newRow = row + moves.get(moveDir)[0];
-    //         int newCol = col + moves.get(moveDir)[1];
-
-    //         // map move to path characters
-    //         String moveChar = getMoveChar(previousMove, moveDir);
-
-    //         // recursive call to explore next move + updating path and position
-    //         String result = findPath(maze, new int[]{newRow, newCol}, finish, path + moveChar, checked, moveDir);
-            
-    //         if (result != null) {
-    //             // return path if valid solution is found
-    //             return result;
-    //         }
-    //     }
-
-    //     // unmark position if no valid path was found
-    //     checked[row][col] = 0;
-    //     return null; 
-    // }
-
+    @Override
     public String findPath(List<List<Character>> maze, int[] currPos, int[] finish, String path, int[][] checked, char previousMove) {
         int row = currPos[0];
         int col = currPos[1];
 
         // base cases
         if (row == finish[0] && col == finish[1]) {
+            maze.get(row).set(col, 'p');
             return path + "F";  // found the finish, return the path taken
         }
         // checking if in an invalid position (wall or off the maze)
@@ -138,6 +74,8 @@ public class MazeSolver {
 
         // mark current position as visited
         checked[row][col] = 1;
+        char originalChar = maze.get(row).get(col);  // store original value
+        maze.get(row).set(col, 'p');
 
         for (char move : movePriority) {
 
@@ -164,6 +102,7 @@ public class MazeSolver {
 
         // unmark position if no valid path was found
         checked[row][col] = 0;
+        maze.get(row).set(col, originalChar);  
         return null; 
     }
 

@@ -1,7 +1,6 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +13,8 @@ public class MazeReader {
     private static final Logger logger = LogManager.getLogger();
     
     public List<List<Character>> loadMaze(String filepath) {
-        System.out.println("** Starting Maze Runner");
-
         try {
-            logger.info("**** Reading the maze from file " + filepath);
+            logger.info("**** Reading the maze from file ");
             BufferedReader reader = new BufferedReader(new FileReader(filepath));
 
             // reading lines from file into array list
@@ -52,18 +49,7 @@ public class MazeReader {
                 }
                 maze.add(mazeRow);
             }
-
             return maze;
-
-            // //? testing to print maze (will remove)
-            // System.out.println("**** Maze Layout ****");
-            // for (int row = 0; row < maze.length; row++) {
-            //     for (int col = 0; col < maze[row].length; col++) {
-            //         System.out.print(maze[row][col]);
-            //     }
-            //     System.out.println(); // Move to the next row
-            // }
-            // return maze;
 
         } catch (Exception e) {
             logger.info("/!\\ An error has occurred /!\\");

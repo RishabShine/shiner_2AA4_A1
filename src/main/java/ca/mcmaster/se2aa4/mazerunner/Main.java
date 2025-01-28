@@ -1,10 +1,5 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.commons.cli.*;
@@ -12,15 +7,74 @@ import org.apache.commons.cli.*;
 public class Main {
 
     private static final Logger logger = LogManager.getLogger();
-    private static final MazeReader mazeReader = new MazeReader();
-    private static final MazeService mazeService = new MazeService();
+    private static final MazeService mazeService = new MazeService(new MazeSolver());
+    private static final ArgumentProcessor argumentProcessor = new ArgumentProcessor();
 
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
 
+        // Options options = new Options();
+
+        // // define the -i option for input file
+        // Option inputFileOption = Option.builder("i")
+        //         .longOpt("input")
+        //         .desc("Path to the maze input file")
+        //         .hasArg()
+        //         .argName("FILE")
+        //         .required(true)
+        //         .build();
+        // options.addOption(inputFileOption);
+
+        // CommandLine cmd = argumentProcessor.parseArguments(args);
+
+        // // retrieve -i and -p options
+        // String filePath = cmd.getOptionValue("i");
+        // String userPath = cmd.getOptionValue("p");
+
+        try {
+            CommandLine cmd = argumentProcessor.parseArguments(args);
+
+            // retrieve -i and -p options
+            String filePath = cmd.getOptionValue("i");
+            String userPath = cmd.getOptionValue("p");
+
+            // parse the command-line arguments
+            //CommandLine cmd = parser.parse(options, args);
+
+            // get the value of the -i flag
+            //String filePath = cmd.getOptionValue("i");
+
+            // if user provided a path for validation
+            if (userPath != null) {
+                //! return, will add logic to valdiate path
+                return;
+            } else { // otherwise will find path for the provided maze
+                
+                // getting path
+                logger.info("**** Computing path");
+                String path = mazeService.getPath(filePath);
+
+                if (path != null) {
+                    logger.info("** Path: " + path);
+                    logger.info("** End of MazeRunner");
+                } else {
+                    logger.info("PATH NOT COMPUTED");
+            }
+        }
+
+        } catch (ParseException e) {
+            logger.error("Error parsing command-line arguments: " + e.getMessage());
+            argumentProcessor.printHelp();
+        } catch (RuntimeException e) {
+            logger.error("/!\\ An error has occurred /!\\");
+            e.printStackTrace();
+        }
+    }
+
+    private static Options defineOptions() {
         Options options = new Options();
 
-        // define the -i option for input file
+        // Define the -i option for input file
         Option inputFileOption = Option.builder("i")
                 .longOpt("input")
                 .desc("Path to the maze input file")
@@ -30,49 +84,16 @@ public class Main {
                 .build();
         options.addOption(inputFileOption);
 
-        CommandLineParser parser = new DefaultParser();
+        // Define the -p option for user-provided path
+        Option pathOption = Option.builder("p")
+                .longOpt("path")
+                .desc("User-provided path to validate (e.g., FFFF)")
+                .hasArg()
+                .argName("PATH")
+                .required(false)
+                .build();
+        options.addOption(pathOption);
 
-        try {
-            // parse the command-line arguments
-            CommandLine cmd = parser.parse(options, args);
-
-            // get the value of the -i flag
-            String filePath = cmd.getOptionValue("i");
-
-            //List<List<Character>> maze = mazeReader.readMaze(filePath);
-            System.out.println();
-            logger.info(mazeService.getPath(filePath));
-
-            //? testing state of maze read in
-            //System.out.println(maze);
-        } catch (ParseException e) {
-            logger.error("Error parsing command-line arguments: " + e.getMessage());
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("MazeRunner", options);
-        } catch (RuntimeException e) {
-            logger.error("/!\\ An error has occurred /!\\");
-            e.printStackTrace();
-        }
-
-        // try {
-        //     System.out.println("**** Reading the maze from file " + args[0]);
-        //     BufferedReader reader = new BufferedReader(new FileReader(args[0]));
-        //     String line;
-        //     while ((line = reader.readLine()) != null) {
-        //         for (int idx = 0; idx < line.length(); idx++) {
-        //             if (line.charAt(idx) == '#') {
-        //                 System.out.print("WALL ");
-        //             } else if (line.charAt(idx) == ' ') {
-        //                 System.out.print("PASS ");
-        //             }
-        //         }
-        //         System.out.print(System.lineSeparator());
-        //     }
-        // } catch(Exception e) {
-        //     System.err.println("/!\\ An error has occured /!\\");
-        // }
-        // logger.info("**** Computing path");
-        // logger.info("PATH NOT COMPUTED");
-        // logger.info("** End of MazeRunner");
+        return options;
     }
 }
