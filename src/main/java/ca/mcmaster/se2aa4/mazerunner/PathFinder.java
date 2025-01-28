@@ -2,7 +2,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 
 import java.util.List;
 
-public interface PathFinder {
+public abstract class PathFinder {
 
     /*
      * returns an int array corresponding to the index of the start position
@@ -10,7 +10,14 @@ public interface PathFinder {
      * @param maze: 2D list representing the maze
      * 
      */
-    public int[] findStart(List<List<Character>> maze);
+    public int[] findStart(List<List<Character>> maze) {
+        for (int i = 0; i < maze.size(); i++) {
+            if (maze.get(i).get(0) == ' ') {
+                return new int[]{i, 0};
+            }
+        }
+        return null;
+    }
 
     /*
      * returns an int array corresponding to the index of the finish position
@@ -18,7 +25,17 @@ public interface PathFinder {
      * @param maze: 2D list representing the maze
      * 
      */
-    public int[] findFinish(List<List<Character>> maze);
+    public int[] findFinish(List<List<Character>> maze) {
+
+        int mazeLength = maze.get(0).size() - 1;
+
+        for (int i = 0; i < maze.size(); i++) {
+            if (maze.get(i).get(mazeLength) == ' ') {
+                return new int[]{i, mazeLength};
+            }
+        }
+        return null;
+    }
 
     /*
      * returns a string that describes a path from start to findih
@@ -33,6 +50,6 @@ public interface PathFinder {
      *                      to 'E')
      * 
      */
-    public String findPath(List<List<Character>> maze, int[] currPos, int[] finish, String path, int[][] checked, char previousMove);
+    public abstract  String findPath(List<List<Character>> maze, int[] currPos, int[] finish, String path, int[][] checked, char previousMove);
     
 }

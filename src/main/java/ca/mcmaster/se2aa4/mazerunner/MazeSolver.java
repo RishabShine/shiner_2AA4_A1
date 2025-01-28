@@ -3,7 +3,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 import java.util.List;
 import java.util.Map;
 
-public class MazeSolver implements PathFinder {
+public class MazeSolver extends PathFinder {
 
     private char[] movePriority = {'R', 'F', 'L'};
 
@@ -32,29 +32,6 @@ public class MazeSolver implements PathFinder {
         'S', 'E',
         'W', 'S'
     );
-
-    @Override
-    public int[] findStart(List<List<Character>> maze) {
-        for (int i = 0; i < maze.size(); i++) {
-            if (maze.get(i).get(0) == ' ') {
-                return new int[]{i, 0};
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public int[] findFinish(List<List<Character>> maze) {
-
-        int mazeLength = maze.get(0).size() - 1;
-
-        for (int i = 0; i < maze.size(); i++) {
-            if (maze.get(i).get(mazeLength) == ' ') {
-                return new int[]{i, mazeLength};
-            }
-        }
-        return null;
-    }
 
     @Override
     public String findPath(List<List<Character>> maze, int[] currPos, int[] finish, String path, int[][] checked, char previousMove) {
