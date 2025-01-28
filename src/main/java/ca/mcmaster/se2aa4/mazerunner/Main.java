@@ -9,6 +9,7 @@ public class Main {
     private static final Logger logger = LogManager.getLogger();
     private static final MazeService mazeService = new MazeService(new MazeSolver());
     private static final ArgumentProcessor argumentProcessor = new ArgumentProcessor();
+    private static final PathFormatter pathFormatter = new PathFormatter();
 
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
@@ -31,7 +32,12 @@ public class Main {
                 String path = mazeService.getPath(filePath);
 
                 if (path != null) {
-                    logger.info("** Path: " + path);
+                    logger.info("** Canonical Path: " + path);
+                    String factorizedPath = pathFormatter.getFactorizedPath(path);
+                    if (factorizedPath == null) {
+                        logger.error("INVALID PATH");
+                    }
+                    logger.info("** Factorized Path: " + factorizedPath);
                     logger.info("** End of MazeRunner");
                 } else {
                     logger.info("PATH NOT COMPUTED");
