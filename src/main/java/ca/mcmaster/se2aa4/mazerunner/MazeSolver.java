@@ -41,7 +41,7 @@ public class MazeSolver extends PathFinder {
         // base cases
         if (row == finish[0] && col == finish[1]) {
             maze.get(row).set(col, 'p');
-            return path + "F";  // found the finish, return the path taken
+            return path;  // found the finish, return the path taken
         }
         // checking if in an invalid position (wall or off the maze)
         if (row < 0 || row >= maze.size() || col < 0 || col >= maze.get(0).size() 
@@ -82,6 +82,50 @@ public class MazeSolver extends PathFinder {
         maze.get(row).set(col, originalChar);  
         return null; 
     }
+
+    @Override
+    public boolean validatePath(List<List<Character>> maze, String path) {
+
+        // finding start and end positions
+        int[] start = findStart(maze);
+        if (start == null) return false;
+
+        int[] finish = findFinish(maze);
+        if (finish == null) return false;
+
+        int row = start[0];
+        int col = start[1];
+    
+        // initial direction is East (E)
+        char currDir = 'E';
+    
+        // iterate through the given path
+        for (char move : path.toCharArray()) {
+            // updating position if moving forward
+            if (move == 'F') {
+                int[] moveOffset = moves.get(currDir);
+                row += moveOffset[0];
+                col += moveOffset[1];
+    
+                // check for out-of-bounds or hitting a wall
+                if (row < 0 || row >= maze.size() || col < 0 || col >= maze.get(0).size() || maze.get(row).get(col) == '#') {
+                    return false;  // invalid path
+                }
+
+            // adjusting orientation
+            } else if (move == 'L') {
+                currDir = leftTurn.get(currDir);
+            } else if (move == 'R') {
+                currDir = rightTurn.get(currDir);
+            } else if (move != ' ') {
+                return false;  // invalid character in path
+            }
+        }
+    
+        // if the final position matches the finish position, path is valid
+        return row == finish[0] && col == finish[1];
+    }
+    
 
     // maps moves to letter for the path
     public static String getMoveString(char move) {

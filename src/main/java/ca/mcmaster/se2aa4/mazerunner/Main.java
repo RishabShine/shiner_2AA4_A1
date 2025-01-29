@@ -24,6 +24,7 @@ public class Main {
             // if user provided a path for validation
             if (userPath != null) {
                 //! return, will add logic to valdiate path
+                logger.info(mazeService.isValidPath(filePath, userPath));
                 return;
             } else { // otherwise will find path for the provided maze
                 

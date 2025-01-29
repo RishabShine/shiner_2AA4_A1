@@ -29,6 +29,18 @@ public class MazeService {
         return path;
     }
 
+    public String isValidPath(String filepath, String path) {
+
+        List<List<Character>> maze = mazeReader.loadMaze(filepath);
+
+        if (pathFinder.validatePath(maze, path)) {
+            return "Provided path is valid";
+        } else {
+            return "Provided path is NOT valid";
+        }
+
+    }
+
     public MazeService(PathFinder pathFinder) {
         this.pathFinder = pathFinder;
     }

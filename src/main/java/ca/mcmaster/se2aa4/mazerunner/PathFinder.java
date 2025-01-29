@@ -38,7 +38,7 @@ public abstract class PathFinder {
     }
 
     /*
-     * returns a string that describes a path from start to findih
+     * returns a string that describes a path from start to finish
      * 
      * @param maze: 2D list representing the maze
      * @param currPos: current position / index at that iteration
@@ -52,4 +52,15 @@ public abstract class PathFinder {
      */
     public abstract  String findPath(List<List<Character>> maze, int[] currPos, int[] finish, String path, int[][] checked, char previousMove);
     
+
+    /*
+     * 
+     * given a path and maze, will return boolean indicating if the path solves the maze
+     * 
+     * @param maze: 2D list representing the maze
+     * @param path: provided path to be validated
+     * 
+     */
+    public abstract boolean validatePath(List<List<Character>> maze, String path);
+
 }
