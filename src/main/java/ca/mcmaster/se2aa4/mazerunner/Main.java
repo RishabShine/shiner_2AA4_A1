@@ -13,6 +13,7 @@ public class Main {
 
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
+        System.out.println("** Starting Maze Runner");
 
         try {
             CommandLine cmd = argumentProcessor.parseArguments(args);
@@ -23,33 +24,45 @@ public class Main {
 
             // if user provided a path for validation
             if (userPath != null) {
-                //! return, will add logic to valdiate path
-                logger.info(mazeService.isValidPath(filePath, userPath));
+                String isValidPath = mazeService.isValidPath(filePath, userPath);
+                logger.info(isValidPath);
+                System.out.println(isValidPath);
                 return;
             } else { // otherwise will find path for the provided maze
                 
                 // getting path
                 logger.info("**** Computing path");
+                System.out.println("**** Computing path");
                 String path = mazeService.getPath(filePath);
 
                 if (path != null) {
                     logger.info("** Canonical Path: " + path);
+                    System.out.println("** Canonical Path: " + path);
                     String factorizedPath = pathFormatter.getFactorizedPath(path);
                     if (factorizedPath == null) {
                         logger.error("INVALID PATH");
+                        return;
                     }
                     logger.info("** Factorized Path: " + factorizedPath);
+                    System.out.println("** Factorized Path: " + factorizedPath);
                     logger.info("** End of MazeRunner");
+                    System.out.println("** End of MazeRunner");
                 } else {
                     logger.info("PATH NOT COMPUTED");
+                    System.out.println("PATH NOT COMPUTED");
                 }
             }
         } catch (ParseException e) {
             logger.error("Error parsing command-line arguments: " + e.getMessage());
+            System.out.println("Error parsing command-line arguments: " + e.getMessage());
             argumentProcessor.printHelp();
+            return;
         } catch (RuntimeException e) {
             logger.error("/!\\ An error has occurred /!\\");
-            e.printStackTrace();
+            System.out.println("/!\\ An error has occurred /!\\");
+            return;
+            // e.printStackTrace();
+            // return;
         }
     }
 }

@@ -19,6 +19,7 @@ public class MazeService {
 
         String path = pathFinder.findPath(maze, start, finish, "", checked, 'E');
 
+        System.out.println("*** Path through maze (path indicated by 'p') ***");
         for (List<Character> row : maze) {
             for (char cell : row) {
                 System.out.print(cell);

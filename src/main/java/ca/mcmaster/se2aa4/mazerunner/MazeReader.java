@@ -15,6 +15,7 @@ public class MazeReader {
     public List<List<Character>> loadMaze(String filepath) {
         try {
             logger.info("**** Reading the maze from file ");
+            System.out.println("**** Reading the maze from file ");
             BufferedReader reader = new BufferedReader(new FileReader(filepath));
 
             // reading lines from file into array list
@@ -53,7 +54,9 @@ public class MazeReader {
 
         } catch (Exception e) {
             logger.info("/!\\ An error has occurred /!\\");
+            System.out.println("/!\\ An error has occurred /!\\");
             logger.error("Error reading maze file", e);
+            System.out.println("Error reading maze file" +  e);
             return null;
         }
     }
