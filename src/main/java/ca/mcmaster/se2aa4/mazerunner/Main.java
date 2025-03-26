@@ -7,7 +7,7 @@ import org.apache.commons.cli.*;
 public class Main {
 
     private static final Logger logger = LogManager.getLogger();
-    private static final MazeService mazeService = new MazeService(new MazeSolver());
+    private static final MazeService mazeService = new MazeService(new ShortestPathSolver(), '#', ' ', 'p');
     private static final ArgumentProcessor argumentProcessor = new ArgumentProcessor();
     private static final PathFormatter pathFormatter = new PathFormatter();
 

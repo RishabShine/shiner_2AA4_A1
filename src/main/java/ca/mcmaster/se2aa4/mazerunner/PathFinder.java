@@ -1,5 +1,7 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import ca.mcmaster.se2aa4.mazerunner.enums.Heading;
+import ca.mcmaster.se2aa4.mazerunner.enums.Maze;
 import java.util.List;
 
 public abstract class PathFinder {
@@ -10,9 +12,9 @@ public abstract class PathFinder {
      * @param maze: 2D list representing the maze
      * 
      */
-    public int[] findStart(List<List<Character>> maze) {
+    public int[] findStart(List<List<Maze>> maze) {
         for (int i = 0; i < maze.size(); i++) {
-            if (maze.get(i).get(0) == ' ') {
+            if (maze.get(i).get(0) == Maze.SPACE) {
                 return new int[]{i, 0};
             }
         }
@@ -25,12 +27,12 @@ public abstract class PathFinder {
      * @param maze: 2D list representing the maze
      * 
      */
-    public int[] findFinish(List<List<Character>> maze) {
+    public int[] findFinish(List<List<Maze>> maze) {
 
         int mazeLength = maze.get(0).size() - 1;
 
         for (int i = 0; i < maze.size(); i++) {
-            if (maze.get(i).get(mazeLength) == ' ') {
+            if (maze.get(i).get(mazeLength) == Maze.SPACE) {
                 return new int[]{i, mazeLength};
             }
         }
@@ -50,8 +52,7 @@ public abstract class PathFinder {
      *                      to 'E')
      * 
      */
-    public abstract  String findPath(List<List<Character>> maze, int[] currPos, int[] finish, String path, int[][] checked, char previousMove);
-    
+    public abstract String findPath(List<List<Maze>> maze, int[] currPos, int[] finish, String path, int[][] checked, Heading previousHeading);
 
     /*
      * 
@@ -61,6 +62,6 @@ public abstract class PathFinder {
      * @param path: provided path to be validated
      * 
      */
-    public abstract boolean validatePath(List<List<Character>> maze, String path);
+    public abstract boolean validatePath(List<List<Maze>> maze, String path);
 
 }
