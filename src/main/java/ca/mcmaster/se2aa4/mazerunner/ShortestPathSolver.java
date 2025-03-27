@@ -15,14 +15,16 @@ public class ShortestPathSolver extends PathFinder {
         Queue<int[]> queue = new LinkedList<>();
         Queue<String> paths = new LinkedList<>();
         Queue<Heading> lastHeadings = new LinkedList<>();
-        Map<String, String> parentMap = new HashMap<>(); // Stores the path from each position
+        Map<String, String> parentMap = new HashMap<>(); // stores the path from each position
     
         queue.add(currPos);
         paths.add(path);
         lastHeadings.add(previousHeading);
     
         checked[currPos[0]][currPos[1]] = 1;
-        parentMap.put(positionKey(currPos), ""); // Mark the start position
+        // marking starting position as part of path as it always will be
+        maze.get(currPos[0]).set(currPos[1], Maze.PATH);
+        parentMap.put(positionKey(currPos), ""); // mark the start position
     
         while (!queue.isEmpty()) {
             int[] pos = queue.poll();
@@ -37,28 +39,28 @@ public class ShortestPathSolver extends PathFinder {
             }
     
             for (Direction turnDirection : Direction.values()) {
-                Heading newHeading = currHeading; // Default is current heading for forward
+                Heading newHeading = currHeading; // default is current heading for forward
                 
                 if (turnDirection == Direction.R) {
-                    newHeading = MapNavigator.getRight(currHeading);  // Turn right
+                    newHeading = MapNavigator.getRight(currHeading);  // turn right
                 } else if (turnDirection == Direction.L) {
-                    newHeading = MapNavigator.getLeft(currHeading);   // Turn left
-                } // For forward (F), no change to the heading, it stays the same.
+                    newHeading = MapNavigator.getLeft(currHeading);   // turn left
+                } // heading does not change
             
-                // Now use newHeading to get the corresponding move offset
+                // get offset (position change) based on new heading
                 int[] moveOffset = MapNavigator.getOffset(newHeading);
                 int newRow = row + moveOffset[0];
                 int newCol = col + moveOffset[1];
             
-                // Check if the move is valid (within bounds and not a wall)
+                // check if the move is valid (within bounds and not in a wall)
                 if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols &&
                     maze.get(newRow).get(newCol) != Maze.WALL && checked[newRow][newCol] == 0) {
             
                     queue.add(new int[]{newRow, newCol});
                     paths.add(currPath + getMoveString(turnDirection));
                     lastHeadings.add(newHeading);
-                    checked[newRow][newCol] = 1; // Mark as visited
-                    parentMap.put(positionKey(new int[]{newRow, newCol}), positionKey(pos)); // Store the parent
+                    checked[newRow][newCol] = 1; // mark as visited
+                    parentMap.put(positionKey(new int[]{newRow, newCol}), positionKey(pos)); // store the parent
                 }
             }
         }
