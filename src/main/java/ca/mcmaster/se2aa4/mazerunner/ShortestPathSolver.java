@@ -45,7 +45,7 @@ public class ShortestPathSolver extends PathFinder {
                     newHeading = MapNavigator.getRight(currHeading);  // turn right
                 } else if (turnDirection == Direction.L) {
                     newHeading = MapNavigator.getLeft(currHeading);   // turn left
-                } // heading does not change
+                } // heading does not change (going forward)
             
                 // get offset (position change) based on new heading
                 int[] moveOffset = MapNavigator.getOffset(newHeading);

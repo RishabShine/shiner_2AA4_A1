@@ -1,10 +1,11 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import ca.mcmaster.se2aa4.mazerunner.Interfaces.SolverSubject;
 import ca.mcmaster.se2aa4.mazerunner.enums.Heading;
 import ca.mcmaster.se2aa4.mazerunner.enums.Maze;
 import java.util.List;
 
-public abstract class PathFinder {
+public abstract class PathFinder implements SolverSubject {
 
     /*
      * returns an int array corresponding to the index of the start position
