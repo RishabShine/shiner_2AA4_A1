@@ -2,6 +2,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 
 import ca.mcmaster.se2aa4.mazerunner.enums.Heading;
 import ca.mcmaster.se2aa4.mazerunner.enums.Direction;
+import ca.mcmaster.se2aa4.mazerunner.enums.SolverUpdateType;
 import ca.mcmaster.se2aa4.mazerunner.Maze.Maze;
 import java.util.*;
 
@@ -10,8 +11,7 @@ public class ShortestPathSolver extends PathFinder {
     //private MapNavigator navigator = new MapNavigator();
     
     public String findPath(Maze maze, Position startPos, Heading startHeading) {
-        // int rows = maze.size();
-        // int cols = maze.get(0).size();
+ 
         Queue<Position> queue = new LinkedList<>();
         Queue<String> paths = new LinkedList<>();
         Queue<Heading> lastHeadings = new LinkedList<>();
@@ -21,11 +21,10 @@ public class ShortestPathSolver extends PathFinder {
         paths.add("");
         lastHeadings.add(startHeading);
     
-        //checked[currPos[0]][currPos[1]] = 1;
-        notifyObservers(startPos);
+        notifyObservers(startPos, SolverUpdateType.CHECK);
 
         // marking starting position as part of path as it always will be
-        maze.markAsPath(startPos, 'P');
+        notifyObservers(startPos, SolverUpdateType.ADD_PATH);
         parentMap.put(startPos, null); // mark the start position
     
         while (!queue.isEmpty()) {
@@ -36,9 +35,7 @@ public class ShortestPathSolver extends PathFinder {
             if (maze.isFinish(pos)) {
                 System.out.println("AT FINISH");
                 System.out.println(currPath);
-                //System.out.println(parentMap);
                 updateMazeWithPath(maze, parentMap, maze.getStart(), maze.getFinish());
-                //System.out.println(currPath);
                 return currPath;
             }
     
@@ -52,19 +49,15 @@ public class ShortestPathSolver extends PathFinder {
                 } // heading does not change (going forward)
             
                 // get offset (position change) based on new heading
-                //int[] moveOffset = MapNavigator.getOffset(newHeading);
                 Position newPos = pos.move(MapNavigator.getOffset(newHeading));
             
                 // check if the move is valid (within bounds and not in a wall)
-                if (maze.isValidMove(newPos) && !parentMap.containsKey(newPos)) {
+                if (maze.isValidMove(newPos)) {
                     queue.add(newPos);
                     paths.add(currPath + getMoveString(turnDirection));
                     lastHeadings.add(newHeading);
-                    //checked[newRow][newCol] = 1; // mark as visited
-                    notifyObservers(newPos);
+                    notifyObservers(newPos, SolverUpdateType.CHECK);
                     parentMap.put(newPos, pos); // store the parent
-
-                    //maze.markAsPath(newPos, 'P');
                 }
             }
         }
@@ -92,39 +85,18 @@ public class ShortestPathSolver extends PathFinder {
      * for easier path visualization and testing
      */
     private void updateMazeWithPath(Maze maze, Map<Position, Position> parentMap, Position start, Position finish) {
-        //String currentKey = positionKey(finish);
         Position curr = finish;
-        Set<Position> visited = new HashSet<>(); 
-
-        System.out.println("IN UPDATE MAZE WITH PATH");
 
         while (!curr.equals(start)) {
-        //while (curr != null) {
-
-            if (visited.contains(curr)) {
-                System.out.println("Detected cycle in parent map! Position: " + curr);
-                return;
-            }
-            visited.add(curr);
-
-            maze.markAsPath(curr, 'P');
-            System.out.println("IN WHILE LOOP");
-            // String[] parts = currentKey.split(",");
-            // int row = Integer.parseInt(parts[0]);
-            // int col = Integer.parseInt(parts[1]);
-            // maze.get(row).set(col, Maze.PATH);
-
-            // currentKey = parentMap.get(currentKey); // Move to the previous position
-
+   
+            notifyObservers(curr, SolverUpdateType.ADD_PATH);
+   
             curr = parentMap.get(curr); // Move to the previous position
-            System.out.println("GOT NEXT POS");
-            System.out.println(curr);
+ 
             if (curr == null) {
                 throw new IllegalStateException("Path reconstruction failed. Parent map is incomplete.");
             }
-            System.out.println("PASSED NULL CHECK");
         }
-        System.out.println("COMPLETE");
     }
     
     //! move to parent class if logic remains same

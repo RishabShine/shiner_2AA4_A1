@@ -18,15 +18,18 @@ public class MazeService {
     //private final MazeSolver mazeSolver = new MazeSolver();
 
     public MazeService(PathFinder pathFinder, char wallSymbol, char openSymbol, char pathSymbol) {
-        this.mazeReader = new MazeReader(wallSymbol, openSymbol);
+        this.mazeReader = new MazeReader(wallSymbol, openSymbol, pathSymbol);
         this.pathFinder = pathFinder;
         this.wallSymbol = wallSymbol;
         this.openSymbol = openSymbol;
         this.pathSymbol = pathSymbol;
     }
 
+
     public void loadMaze(String filepath) {
         this.maze = mazeReader.loadMaze(filepath);
+        //! not well palced should change
+        pathFinder.addObserver(maze);
     }
 
     public String getPath() {
@@ -35,13 +38,6 @@ public class MazeService {
             //! make an error
             System.out.println("** No maze currently loaded, please specify a maze file");
         }
-        
-        //Maze maze = mazeReader.loadMaze(filepath);
-
-        // int[] start = pathFinder.findStart(maze);
-        // int[] finish = pathFinder.findFinish(maze);
-
-        //int[][] checked = new int[maze.size()][maze.get(0).size()];
 
         String path = pathFinder.findPath(maze, maze.getStart(), Heading.E);
 

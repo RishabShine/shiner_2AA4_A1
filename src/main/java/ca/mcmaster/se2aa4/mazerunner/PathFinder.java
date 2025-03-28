@@ -3,6 +3,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 import ca.mcmaster.se2aa4.mazerunner.Interfaces.SolverObserver;
 import ca.mcmaster.se2aa4.mazerunner.Interfaces.SolverSubject;
 import ca.mcmaster.se2aa4.mazerunner.enums.Heading;
+import ca.mcmaster.se2aa4.mazerunner.enums.SolverUpdateType;
 import ca.mcmaster.se2aa4.mazerunner.Maze.Maze;
 
 import java.util.ArrayList;
@@ -27,62 +28,14 @@ public abstract class PathFinder implements SolverSubject {
     }
 
     @Override
-    public void notifyObservers(Position pos) {
+    public void notifyObservers(Position pos, SolverUpdateType updateType) {
+        //System.out.println("IN NOTIFY");
         for (SolverObserver observer : observers) {
-            observer.update(pos);
+            observer.update(pos, updateType);
+            //System.out.println("CALLED UPDATE");
         }
     }
 
-    //public void 
-
-    /*
-     * returns an int array corresponding to the index of the start position
-     * 
-     * @param maze: 2D list representing the maze
-     * 
-     */
-    // public int[] findStart(List<List<Maze>> maze) {
-    //     for (int i = 0; i < maze.size(); i++) {
-    //         if (maze.get(i).get(0) == Maze.SPACE) {
-    //             return new int[]{i, 0};
-    //         }
-    //     }
-    //     return null;
-    // }
-
-    /*
-     * returns an int array corresponding to the index of the finish position
-     * 
-     * @param maze: 2D list representing the maze
-     * 
-     */
-    // public int[] findFinish(List<List<Maze>> maze) {
-
-    //     int mazeLength = maze.get(0).size() - 1;
-
-    //     for (int i = 0; i < maze.size(); i++) {
-    //         if (maze.get(i).get(mazeLength) == Maze.SPACE) {
-    //             return new int[]{i, mazeLength};
-    //         }
-    //     }
-    //     return null;
-    // }
-
-    /*
-     * returns a string that describes a path from start to finish
-     * 
-     * @param maze: 2D list representing the maze
-     * @param currPos: current position / index at that iteration
-     * @param finish: finishing position / index
-     * @param path: the path taken
-     * @param checked: contains all visited indexes
-     * @param previousMove: direction of previous move to find determine the 
-     *                      direction of next move (on first iteration defaults
-     *                      to 'E')
-     * 
-     */
-    // public abstract String findPath(Maze maze, Position currPos, Position finish, String path, int[][] checked, Heading previousHeading);
-    // public abstract String findPath(Maze maze, Position currPos, String path, Heading previousHeading);
     public abstract String findPath(Maze maze, Position startPos, Heading startHeading);
 
 
@@ -99,8 +52,6 @@ public abstract class PathFinder implements SolverSubject {
     public boolean validatePath(Maze maze, String path) {
         Position start = maze.getStart();
         if (start == null) return false;
-    
-        //Position finish = maze.findFinish();
         if (maze.getFinish() == null) return false;
     
         Position currPos = start;
@@ -113,7 +64,6 @@ public abstract class PathFinder implements SolverSubject {
                 if (!maze.isValidMove(currPos)) {
                     return false;
                 }
-                //current = next; // Move forward
             } else if (move == 'L') {
                 currHeading = MapNavigator.getLeft(currHeading);
             } else if (move == 'R') {

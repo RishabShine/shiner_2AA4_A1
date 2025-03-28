@@ -17,11 +17,13 @@ public class MazeReader {
     // default chars for tiles
     char wallChar = '#';
     char openChar = ' ';
+    char pathChar = 'P';
 
     // optional constructor if user wants to use different chars
-    public MazeReader(char wallChar, char openChar) {
+    public MazeReader(char wallChar, char openChar, char pathChar) {
         this.wallChar = wallChar;
         this.openChar = openChar;
+        this.pathChar = pathChar;
     }
 
     //! can possible use factory pattern here
@@ -34,8 +36,6 @@ public class MazeReader {
             List<String> lines = new ArrayList<>();
             int cols = 0; // max row length
 
-
-            //! was different before
             String line;
             while ((line = reader.readLine()) != null) { // FIXED HERE
                 lines.add(line);
@@ -80,7 +80,7 @@ public class MazeReader {
         if (start == null || finish == null) {
             throw new IllegalArgumentException("Invalid maze");
         }
-        return new Maze(maze, start, finish);
+        return new Maze(maze, start, finish, wallChar, openChar, pathChar);
     }
 
     private Position findStart(List<List<Tile>> maze) {

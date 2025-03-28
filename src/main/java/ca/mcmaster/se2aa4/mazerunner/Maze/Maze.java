@@ -2,35 +2,46 @@ package ca.mcmaster.se2aa4.mazerunner.Maze;
 
 import ca.mcmaster.se2aa4.mazerunner.Tiles.PathTile;
 import ca.mcmaster.se2aa4.mazerunner.Tiles.Tile;
-import ca.mcmaster.se2aa4.mazerunner.PathFinder;
+//import ca.mcmaster.se2aa4.mazerunner.PathFinder;
 import ca.mcmaster.se2aa4.mazerunner.Interfaces.SolverObserver;
+import ca.mcmaster.se2aa4.mazerunner.enums.SolverUpdateType;
 import ca.mcmaster.se2aa4.mazerunner.Position;
 import java.util.List;
 
 public class Maze implements SolverObserver{
 
-    //private PathFinder pathFinder;
+    //private PathFinder pathFinder
 
     private List<List<Tile>> maze;
-    //private Tile[][] grid;
     private int rows, cols;
     private Position start;
     private Position finish;
 
-    public Maze(List<List<Tile>> maze, Position start, Position finish) {
+    char wallChar;// = '#';
+    char openChar;// = ' ';
+    char pathChar;// = 'P';
+
+    public Maze(List<List<Tile>> maze, Position start, Position finish, char wallChar, char openChar, char pathChar) {
         this.maze = maze;
         this.rows = maze.size();
         this.cols = maze.get(0).size();
         this.start = start;
         this.finish = finish;
+        this.wallChar = wallChar;
+        this.openChar = openChar;
+        this.pathChar = pathChar;
     }
 
     @Override
-    public void update(Position pos) {
-        if (isCheckable(pos)) {
-            markChecked(pos);
-            System.out.println(pos);
-            //grid[row][col].setChecked(true);
+    public void update(Position pos, SolverUpdateType updateType) {
+        if (updateType == SolverUpdateType.CHECK) {
+            if (isCheckable(pos)) {
+                markChecked(pos);
+            }
+        } else if (updateType == SolverUpdateType.ADD_PATH) {
+            if (isCheckable(pos)) {
+                markAsPath(pos);
+            }
         }
     }
 
@@ -59,27 +70,23 @@ public class Maze implements SolverObserver{
     }
 
     public Tile getTile(Position pos) {
-        return maze.get(pos.getRow()).get(pos.getCol());//grid[row][col];
+        return maze.get(pos.getRow()).get(pos.getCol());
     }
 
-    public void markAsPath(Position pos, Character pathSymbol) {
-        maze.get(pos.getRow()).set(pos.getCol(), new PathTile(pathSymbol));// = new PathTile(pathSymbol);
+    private void markAsPath(Position pos) {
+        maze.get(pos.getRow()).set(pos.getCol(), new PathTile(pathChar));
     }
 
-    public void markChecked(Position pos) {
+    private void markChecked(Position pos) {
         maze.get(pos.getRow()).get(pos.getCol()).markChecked();
     }
 
+    //! can move this to private and make user given path valdiation done from in maze
     public boolean isCheckable(Position pos) {
         return maze.get(pos.getRow()).get(pos.getCol()).isCheckable();
     }
 
     public boolean isValidMove(Position pos) {
-        // System.out.println(pos.getRow() >= 0 && pos.getRow() < rows && 
-        // pos.getCol() >= 0 && pos.getCol() < cols && 
-        // maze.get(pos.getRow()).get(pos.getCol()).isCheckable() && 
-        // !maze.get(pos.getRow()).get(pos.getCol()).isChecked());
-
         return pos.getRow() >= 0 && pos.getRow() < rows && 
                pos.getCol() >= 0 && pos.getCol() < cols && 
                maze.get(pos.getRow()).get(pos.getCol()).isCheckable() && 

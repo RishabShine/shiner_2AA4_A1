@@ -16,14 +16,6 @@ public class Position {
         return new Position(this.row + offset[0], this.col + offset[1]);
     }
 
-    // public void setRow(int row) {
-    //     this.row = row;
-    // }
-
-    // public void setCol(int col) {
-    //     this.col = col;
-    // }
-
     public int getRow() {
         return this.row;
     }
@@ -34,7 +26,6 @@ public class Position {
 
     @Override
     public boolean equals(Object obj) {
-        //if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Position position = (Position) obj;
         return this.row == position.getRow() && this.col == position.getCol();
