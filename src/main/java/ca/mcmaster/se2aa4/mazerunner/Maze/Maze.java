@@ -4,35 +4,42 @@ import ca.mcmaster.se2aa4.mazerunner.Tiles.PathTile;
 import ca.mcmaster.se2aa4.mazerunner.Tiles.Tile;
 import ca.mcmaster.se2aa4.mazerunner.PathFinder;
 import ca.mcmaster.se2aa4.mazerunner.Interfaces.SolverObserver;
+import ca.mcmaster.se2aa4.mazerunner.Position;
+import java.util.List;
 
 public class Maze implements SolverObserver{
 
-    private PathFinder pathFinder;
+    //private PathFinder pathFinder;
 
-    private Tile[][] grid;
+    private List<List<Tile>> maze;
+    //private Tile[][] grid;
     private int rows, cols;
-    private int[] start;
-    private int[] finish;
+    private Position start;
+    private Position finish;
 
-    public Maze(Tile[][] grid, int[] start, int[] finish) {
-        this.grid = grid;
-        this.rows = grid.length;
-        this.cols = grid[0].length;
+    public Maze(List<List<Tile>> maze, Position start, Position finish) {
+        this.maze = maze;
+        this.rows = maze.size();
+        this.cols = maze.get(0).size();
         this.start = start;
         this.finish = finish;
     }
 
     @Override
-    public void update(int[] pos) {
-        int row = pos[0], col = pos[1];
-        if (isCheckable(row, col)) {
-            markChecked(row, col);
+    public void update(Position pos) {
+        if (isCheckable(pos)) {
+            markChecked(pos);
+            System.out.println(pos);
             //grid[row][col].setChecked(true);
         }
-        //? can move this to a helper function
-        if (row == finish[0] && col == finish[1]) {
+    }
+
+    public boolean isFinish(Position pos) {
+        if (pos.equals(finish)) {
             System.out.println("Maze solved!");
+            return true;
         }
+        return false;
     }
 
     public int getRows() {
@@ -43,32 +50,49 @@ public class Maze implements SolverObserver{
         return cols;
     }
 
-    public int[] getStart() {
+    public Position getStart() {
         return start;
     }
 
-    public int[] getFinish() {
+    public Position getFinish() {
         return finish;
     }
 
-    public Tile getTile(int row, int col) {
-        return grid[row][col];
+    public Tile getTile(Position pos) {
+        return maze.get(pos.getRow()).get(pos.getCol());//grid[row][col];
     }
 
-    public void markAsPath(int row, int col, Character pathSymbol) {
-        grid[row][col] = new PathTile(pathSymbol);
+    public void markAsPath(Position pos, Character pathSymbol) {
+        maze.get(pos.getRow()).set(pos.getCol(), new PathTile(pathSymbol));// = new PathTile(pathSymbol);
     }
 
-    public void markChecked(int row, int col) {
-        grid[row][col].markChecked();
+    public void markChecked(Position pos) {
+        maze.get(pos.getRow()).get(pos.getCol()).markChecked();
     }
 
-    public boolean isCheckable(int row, int col) {
-        return grid[row][col].isCheckable();
+    public boolean isCheckable(Position pos) {
+        return maze.get(pos.getRow()).get(pos.getCol()).isCheckable();
     }
 
-    public boolean isValidMove(int row, int col) {
-        return row >= 0 && row < rows && col >= 0 && col < cols && grid[row][col].isCheckable() && !grid[row][col].isChecked();
+    public boolean isValidMove(Position pos) {
+        // System.out.println(pos.getRow() >= 0 && pos.getRow() < rows && 
+        // pos.getCol() >= 0 && pos.getCol() < cols && 
+        // maze.get(pos.getRow()).get(pos.getCol()).isCheckable() && 
+        // !maze.get(pos.getRow()).get(pos.getCol()).isChecked());
+
+        return pos.getRow() >= 0 && pos.getRow() < rows && 
+               pos.getCol() >= 0 && pos.getCol() < cols && 
+               maze.get(pos.getRow()).get(pos.getCol()).isCheckable() && 
+               !maze.get(pos.getRow()).get(pos.getCol()).isChecked();
+    }
+
+    public void printMaze() {
+        for (List<Tile> row : maze) {
+            for (Tile tile : row) {
+                System.out.print(tile.getSymbol());
+            }
+            System.out.println();
+        }
     }
     
 }

@@ -22,9 +22,16 @@ public class Main {
             String filePath = cmd.getOptionValue("i");
             String userPath = cmd.getOptionValue("p");
 
+            if (filePath != null) {
+                mazeService.loadMaze(filePath);
+            } else {
+                System.out.println("** No maze file spcified");
+                return;
+            }
+
             // if user provided a path for validation
             if (userPath != null) {
-                String isValidPath = mazeService.isValidPath(filePath, userPath);
+                String isValidPath = mazeService.isValidPath(userPath);
                 logger.info(isValidPath);
                 System.out.println(isValidPath);
                 return;
@@ -33,7 +40,7 @@ public class Main {
                 // getting path
                 logger.info("**** Computing path");
                 System.out.println("**** Computing path");
-                String path = mazeService.getPath(filePath);
+                String path = mazeService.getPath();
 
                 if (path != null) {
                     logger.info("** Canonical Path: " + path);
