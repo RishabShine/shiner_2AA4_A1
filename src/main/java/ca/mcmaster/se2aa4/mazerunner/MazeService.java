@@ -1,7 +1,7 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
 import ca.mcmaster.se2aa4.mazerunner.Maze.Maze;
-import ca.mcmaster.se2aa4.mazerunner.Tiles.Tile;
+//import ca.mcmaster.se2aa4.mazerunner.Tiles.Tile;
 import ca.mcmaster.se2aa4.mazerunner.enums.Heading;
 
 import java.util.List;

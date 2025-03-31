@@ -74,13 +74,6 @@ public class ShortestPathSolver extends PathFinder {
     }
 
     /**
-     * converts a position into a string key "row, column"
-     */
-    private String positionKey(int[] pos) {
-        return pos[0] + "," + pos[1];
-    }
-
-    /**
      * modifies maze to set all slots part of shortest path as Maze.PATH
      * for easier path visualization and testing
      */

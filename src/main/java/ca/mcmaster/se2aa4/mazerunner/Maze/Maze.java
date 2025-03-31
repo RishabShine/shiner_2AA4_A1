@@ -8,7 +8,7 @@ import ca.mcmaster.se2aa4.mazerunner.enums.SolverUpdateType;
 import ca.mcmaster.se2aa4.mazerunner.Position;
 import java.util.List;
 
-public class Maze implements SolverObserver{
+public class Maze implements SolverObserver {
 
     //private PathFinder pathFinder
 
