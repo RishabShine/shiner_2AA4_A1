@@ -69,6 +69,7 @@ public class Maze implements SolverObserver {
         return finish;
     }
 
+    //! can remove
     public Tile getTile(Position pos) {
         return maze.get(pos.getRow()).get(pos.getCol());
     }
