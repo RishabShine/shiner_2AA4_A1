@@ -91,37 +91,4 @@ public class ShortestPathSolver extends PathFinder {
             }
         }
     }
-    
-    //! move to parent class if logic remains same
-    // @Override
-    // public boolean validatePath(Maze maze, String path) {
-    //     int[] start = findStart(maze);
-    //     if (start == null) return false;
-
-    //     int[] finish = findFinish(maze);
-    //     if (finish == null) return false;
-
-    //     int row = start[0];
-    //     int col = start[1];
-    //     Heading currHeading = Heading.E;
-    
-    //     for (char move : path.toCharArray()) {
-    //         if (move == 'F') {
-    //             int[] moveOffset = MapNavigator.getOffset(currHeading);
-    //             row += moveOffset[0];
-    //             col += moveOffset[1];
-    
-    //             if (row < 0 || row >= maze.size() || col < 0 || col >= maze.get(0).size() || maze.get(row).get(col) == Maze.WALL) {
-    //                 return false;
-    //             }
-    //         } else if (move == 'L') {
-    //             currHeading = MapNavigator.getLeft(currHeading);
-    //         } else if (move == 'R') {
-    //             currHeading = MapNavigator.getRight(currHeading);
-    //         } else if (move != ' ') {
-    //             return false;
-    //         }
-    //     }
-    //     return row == finish[0] && col == finish[1];
-    // }
 }
