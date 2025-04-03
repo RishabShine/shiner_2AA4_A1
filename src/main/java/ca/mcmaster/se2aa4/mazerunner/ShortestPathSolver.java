@@ -7,7 +7,8 @@ import ca.mcmaster.se2aa4.mazerunner.Maze.Maze;
 import java.util.*;
 
 public class ShortestPathSolver extends PathFinder {
-        
+    
+    @Override
     public String findPath(Maze maze, Position startPos, Heading startHeading) {
  
         Queue<Position> queue = new LinkedList<>();

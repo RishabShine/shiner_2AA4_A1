@@ -4,6 +4,8 @@ public enum TileType {
     
     OPEN, 
 
-    WALL
+    WALL, 
+
+    PATH
 
 }

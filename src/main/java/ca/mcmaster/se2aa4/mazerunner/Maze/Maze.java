@@ -1,15 +1,17 @@
 package ca.mcmaster.se2aa4.mazerunner.Maze;
 
-import ca.mcmaster.se2aa4.mazerunner.Tiles.PathTile;
 import ca.mcmaster.se2aa4.mazerunner.Tiles.Tile;
 import ca.mcmaster.se2aa4.mazerunner.Interfaces.SolverObserver;
+import ca.mcmaster.se2aa4.mazerunner.Interfaces.TileFactory;
 import ca.mcmaster.se2aa4.mazerunner.enums.SolverUpdateType;
+import ca.mcmaster.se2aa4.mazerunner.enums.TileType;
 import ca.mcmaster.se2aa4.mazerunner.Position;
 import ca.mcmaster.se2aa4.mazerunner.MazeReader;
 import java.util.List;
 
 public class Maze implements SolverObserver {
 
+    private final TileFactory tileFactory;
     private List<List<Tile>> maze;
     private int rows, cols;
     private Position start;
@@ -29,18 +31,20 @@ public class Maze implements SolverObserver {
         this.cols = maze.get(0).size();
         this.start = findStart();
         this.finish = findFinish();
+        this.tileFactory = new MazeTileFactory(openChar, wallChar, pathChar);
     }
 
-    //! remove, only used for test
-    public Maze(List<List<Tile>> maze, Position start, Position finish, char wallChar, char openChar, char pathChar) {
+    // alternate consutructor that directly accepts maze instead of filepath, only used for test cases
+    public Maze(List<List<Tile>> maze, char wallChar, char openChar, char pathChar) {
         this.maze = maze;
         this.rows = maze.size();
         this.cols = maze.get(0).size();
-        this.start = start;
-        this.finish = finish;
+        this.start = findStart();
+        this.finish = findFinish();
         this.wallChar = wallChar;
         this.openChar = openChar;
         this.pathChar = pathChar;
+        this.tileFactory = new MazeTileFactory(openChar, wallChar, pathChar);
     }
 
     @Override
@@ -80,20 +84,14 @@ public class Maze implements SolverObserver {
         return finish;
     }
 
-    //! can remove
-    public Tile getTile(Position pos) {
-        return maze.get(pos.getRow()).get(pos.getCol());
-    }
-
     private void markAsPath(Position pos) {
-        maze.get(pos.getRow()).set(pos.getCol(), new PathTile(pathChar));
+        maze.get(pos.getRow()).set(pos.getCol(), tileFactory.getTile(TileType.PATH));
     }
 
     private void markChecked(Position pos) {
         maze.get(pos.getRow()).get(pos.getCol()).markChecked();
     }
 
-    //! can move this to private and make user given path valdiation done from in maze
     public boolean isCheckable(Position pos) {
         return maze.get(pos.getRow()).get(pos.getCol()).isCheckable();
     }

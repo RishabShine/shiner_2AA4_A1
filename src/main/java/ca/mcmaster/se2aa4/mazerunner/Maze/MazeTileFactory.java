@@ -6,12 +6,21 @@ import ca.mcmaster.se2aa4.mazerunner.Interfaces.TileFactory;
 
 public class MazeTileFactory implements TileFactory {
 
-    private Character openChar;
-    private Character wallChar;
+    // default values
+    private Character openChar = ' ';
+    private Character wallChar = '#';
+    private Character pathChar = 'P';
 
     public MazeTileFactory (Character openChar, Character wallChar) {
         this.openChar = openChar;
         this.wallChar = wallChar;
+    }
+
+
+    public MazeTileFactory (Character openChar, Character wallChar, Character pathChar) {
+        this.openChar = openChar;
+        this.wallChar = wallChar;
+        this.pathChar = pathChar;
     }
 
     @Override
@@ -20,6 +29,8 @@ public class MazeTileFactory implements TileFactory {
             return new OpenTile(openChar);
         } else if (tileType == TileType.WALL) {
             return new WallTile(wallChar);
+        } else if (tileType == TileType.PATH) {
+            return new PathTile(pathChar);
         }
         throw new IllegalArgumentException("Invalid tile type: " + tileType);
     }

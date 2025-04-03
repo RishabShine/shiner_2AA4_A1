@@ -9,6 +9,10 @@ import org.junit.jupiter.api.Test;
  */
 class PositionTest {
 
+    /*
+     * testing overriden .equals(T) method
+     */
+    
     @Test
     void testEquals_SameValues() {
         Position p1 = new Position(2, 3);

@@ -30,7 +30,6 @@ public class MazeReader {
         this.tileFactory = new MazeTileFactory(openChar, wallChar);
     }
 
-    //! can possible use factory pattern here
     public List<List<Tile>> loadMaze(String filepath) {
         try {
             logger.info("**** Reading the maze from file ");
