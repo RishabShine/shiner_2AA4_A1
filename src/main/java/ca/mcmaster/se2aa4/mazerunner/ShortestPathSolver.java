@@ -7,9 +7,7 @@ import ca.mcmaster.se2aa4.mazerunner.Maze.Maze;
 import java.util.*;
 
 public class ShortestPathSolver extends PathFinder {
-    
-    //private MapNavigator navigator = new MapNavigator();
-    
+        
     public String findPath(Maze maze, Position startPos, Heading startHeading) {
  
         Queue<Position> queue = new LinkedList<>();
@@ -26,15 +24,14 @@ public class ShortestPathSolver extends PathFinder {
         // marking starting position as part of path as it always will be
         notifyObservers(startPos, SolverUpdateType.ADD_PATH);
         parentMap.put(startPos, null); // mark the start position
-    
         while (!queue.isEmpty()) {
             Position pos = queue.poll();
             String currPath = paths.poll();
             Heading currHeading = lastHeadings.poll();
     
             if (maze.isFinish(pos)) {
-                System.out.println("AT FINISH");
-                System.out.println(currPath);
+                //System.out.println("AT FINISH");
+                //System.out.println(currPath);
                 updateMazeWithPath(maze, parentMap, maze.getStart(), maze.getFinish());
                 return currPath;
             }

@@ -7,7 +7,6 @@ import org.apache.commons.cli.*;
 public class Main {
 
     private static final Logger logger = LogManager.getLogger();
-    private static final MazeService mazeService = new MazeService(new ShortestPathSolver(), '#', ' ', 'p');
     private static final ArgumentProcessor argumentProcessor = new ArgumentProcessor();
     private static final PathFormatter pathFormatter = new PathFormatter();
 
@@ -17,13 +16,14 @@ public class Main {
 
         try {
             CommandLine cmd = argumentProcessor.parseArguments(args);
+            MazeService mazeService;
 
             // retrieve -i and -p options
-            String filePath = cmd.getOptionValue("i");
+            String filepath = cmd.getOptionValue("i");
             String userPath = cmd.getOptionValue("p");
 
-            if (filePath != null) {
-                mazeService.loadMaze(filePath);
+            if (filepath != null) {
+                mazeService = new MazeService(new ShortestPathSolver(), '#', ' ', 'P', filepath);
             } else {
                 System.out.println("** No maze file spcified");
                 return;

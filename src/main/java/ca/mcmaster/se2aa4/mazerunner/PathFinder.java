@@ -29,10 +29,8 @@ public abstract class PathFinder implements SolverSubject {
 
     @Override
     public void notifyObservers(Position pos, SolverUpdateType updateType) {
-        //System.out.println("IN NOTIFY");
         for (SolverObserver observer : observers) {
             observer.update(pos, updateType);
-            //System.out.println("CALLED UPDATE");
         }
     }
 
@@ -56,11 +54,12 @@ public abstract class PathFinder implements SolverSubject {
     
         Position currPos = start;
         Heading currHeading = Heading.E;
+
+        path = path.replace(" ", ""); // removing all spaces
     
         for (char move : path.toCharArray()) {
             if (move == 'F') {
                 currPos = currPos.move(MapNavigator.getOffset(currHeading));
-    
                 if (!maze.isValidMove(currPos)) {
                     return false;
                 }
@@ -68,11 +67,11 @@ public abstract class PathFinder implements SolverSubject {
                 currHeading = MapNavigator.getLeft(currHeading);
             } else if (move == 'R') {
                 currHeading = MapNavigator.getRight(currHeading);
-            } else if (move != ' ') { // Invalid character in path
+            } else { // Invalid character in path
                 return false;
             }
         }
-        return maze.isCheckable(currPos);
+        return maze.isFinish(currPos);
     }
     
 

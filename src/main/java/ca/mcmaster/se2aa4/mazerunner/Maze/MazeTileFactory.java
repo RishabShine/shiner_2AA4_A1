@@ -21,7 +21,7 @@ public class MazeTileFactory implements TileFactory {
         } else if (tileType == TileType.WALL) {
             return new WallTile(wallChar);
         }
-        return null;
+        throw new IllegalArgumentException("Invalid tile type: " + tileType);
     }
 
 }

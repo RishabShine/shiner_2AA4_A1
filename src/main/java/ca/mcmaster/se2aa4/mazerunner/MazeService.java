@@ -5,60 +5,46 @@ import ca.mcmaster.se2aa4.mazerunner.enums.Heading;
 
 public class MazeService {
 
-    private final MazeReader mazeReader;// = new MazeReader();
     private final PathFinder pathFinder;
     private Maze maze;
-        
-    private final char wallSymbol;
-    private final char openSymbol;
-    private final char pathSymbol;
-    //private final MazeSolver mazeSolver = new MazeSolver();
 
-    public MazeService(PathFinder pathFinder, char wallSymbol, char openSymbol, char pathSymbol) {
-        this.mazeReader = new MazeReader(wallSymbol, openSymbol, pathSymbol);
+    private final char pathChar;
+
+    public MazeService(PathFinder pathFinder, char wallChar, char openChar, char pathChar, String filepath) {
+        this.maze = new Maze(wallChar, openChar, pathChar, filepath);
         this.pathFinder = pathFinder;
-        this.wallSymbol = wallSymbol;
-        this.openSymbol = openSymbol;
-        this.pathSymbol = pathSymbol;
-    }
-
-
-    public void loadMaze(String filepath) {
-        this.maze = mazeReader.loadMaze(filepath);
-        //! not well palced should change
-        pathFinder.addObserver(maze);
+        // creating observer - subject relation
+        this.pathFinder.addObserver(this.maze);
+        this.pathChar = pathChar;
     }
 
     public String getPath() {
 
         if (this.maze == null) {
-            //! make an error
-            System.out.println("** No maze currently loaded, please specify a maze file");
+            throw new IllegalArgumentException("** No maze currently loaded, please specify a maze file");
         }
 
         String path = pathFinder.findPath(maze, maze.getStart(), Heading.E);
 
-        //! check if path is null
-
-        System.out.println("*** Path through maze (path indicated by " + pathSymbol + ") ***");
-        maze.printMaze();
+        if (path != null) {
+            System.out.println("*** Path through maze (path indicated by " + pathChar + ") ***");
+            maze.printMaze();
+        }
+        
+        // System.out.println("*** Path through maze (path indicated by " + pathChar + ") ***");
+        // maze.printMaze();
 
         return path;
     }
 
     public String isValidPath(String path) {
-
-        //List<List<Maze>> maze = mazeReader.loadMaze(filepath);
         if (this.maze == null) {
-            //! make an error
-            System.out.println("** No maze currently loaded, please specify a maze file");
+            throw new IllegalArgumentException("** No maze currently loaded, please specify a maze file");
         }
-
         if (pathFinder.validatePath(this.maze, path)) {
             return "Provided path is valid";
         } else {
             return "Provided path is NOT valid";
         }
-
     }
 }
