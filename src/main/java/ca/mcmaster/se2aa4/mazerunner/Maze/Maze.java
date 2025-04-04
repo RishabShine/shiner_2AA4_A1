@@ -3,7 +3,6 @@ package ca.mcmaster.se2aa4.mazerunner.Maze;
 import ca.mcmaster.se2aa4.mazerunner.Tiles.Tile;
 import ca.mcmaster.se2aa4.mazerunner.Interfaces.SolverObserver;
 import ca.mcmaster.se2aa4.mazerunner.Interfaces.TileFactory;
-import ca.mcmaster.se2aa4.mazerunner.enums.SolverUpdateType;
 import ca.mcmaster.se2aa4.mazerunner.enums.TileType;
 import ca.mcmaster.se2aa4.mazerunner.Position;
 import ca.mcmaster.se2aa4.mazerunner.MazeReader;
@@ -48,15 +47,16 @@ public class Maze implements SolverObserver {
     }
 
     @Override
-    public void update(Position pos, SolverUpdateType updateType) {
-        if (updateType == SolverUpdateType.CHECK) {
-            if (isCheckable(pos)) {
-                markChecked(pos);
-            }
-        } else if (updateType == SolverUpdateType.ADD_PATH) {
-            if (isCheckable(pos)) {
-                markAsPath(pos);
-            }
+    public void updateChecked(Position pos) {
+        if (isCheckable(pos)) {
+            markChecked(pos);
+        }
+    }
+
+    @Override
+    public void updatePath(Position pos) {
+        if (isCheckable(pos)) {
+            markAsPath(pos);
         }
     }
 

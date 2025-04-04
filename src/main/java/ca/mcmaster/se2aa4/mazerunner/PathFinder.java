@@ -30,7 +30,11 @@ public abstract class PathFinder implements SolverSubject {
     @Override
     public void notifyObservers(Position pos, SolverUpdateType updateType) {
         for (SolverObserver observer : observers) {
-            observer.update(pos, updateType);
+            if (updateType == SolverUpdateType.CHECK) {
+                observer.updateChecked(pos);
+            } else if (updateType == SolverUpdateType.ADD_PATH) {
+                observer.updatePath(pos);
+            }
         }
     }
 
